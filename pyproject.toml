@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crewai-ainative"
+version = "0.1.0"
+description = "Configure crewai to use AINative's free LLMs + ZeroMemory — no OpenAI key needed."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "AINative Studio", email = "dev@ainative.studio"},
+]
+keywords = [
+    "crewai",
+    "crewai-plugin",
+    "multi-agent",
+    "ai-agents",
+    "ainative",
+    "free-llm",
+    "zerodb",
+    "zeromemory",
+    "auto-provisioning",
+    "agent-memory",
+    "llama",
+    "claude",
+    "cursor",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "requests>=2.28",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/AINative-Studio/crewai-ainative"
+Documentation = "https://docs.ainative.studio"
+Repository = "https://github.com/AINative-Studio/crewai-ainative"
+Issues = "https://github.com/AINative-Studio/crewai-ainative/issues"
+
+[tool.setuptools.packages.find]
+include = ["crewai_ainative*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
