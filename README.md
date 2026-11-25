@@ -59,15 +59,45 @@ configure_crew(model="meta-llama/Llama-4-Scout-17B-16E-Instruct")
 
 ## ZeroMemory Integration
 
-Store and recall agent memories across crew runs:
+`get_memory_config()` returns the real `memory/v2` base URL and resolved API key — the
+same `remember`/`recall` endpoints documented on [Agent Quickstart](https://zerodb.ainative.studio/docs/agent-quickstart).
+Wiring it into a specific CrewAI memory callback is left to your crew's structure since
+CrewAI's own memory API is still evolving, but these two functions work with any HTTP
+client regardless:
 
 ```python
 from crewai_ainative import configure_crew, get_memory_config
+import requests
 
 configure_crew()
-memory_config = get_memory_config(entity="my-research-crew")
-# memory_config has api_key and memory_api_base for ZeroDB integration
+memory_cfg = get_memory_config(entity="research-crew")
+# -> {"memory_api_base": "https://api.ainative.studio/api/v1/public/memory/v2",
+#     "api_key": "...", "entity": "research-crew"}
+
+def remember(content: str):
+    requests.post(
+        f"{memory_cfg['memory_api_base']}/remember",
+        headers={"X-API-Key": memory_cfg['api_key']},
+        json={"content": content, "entity": memory_cfg['entity']},
+    )
+
+def recall(query: str, top_k: int = 5):
+    resp = requests.post(
+        f"{memory_cfg['memory_api_base']}/recall",
+        headers={"X-API-Key": memory_cfg['api_key']},
+        json={"query": query, "top_k": top_k, "entity": memory_cfg['entity']},
+    )
+    return resp.json()
+
+# After a crew run, persist what it learned:
+remember("The user prefers Llama 3.3 70B for research tasks over DeepSeek.")
+
+# In a later run, recall it before kicking off the crew:
+prior_context = recall("What model does the user prefer for research?")
 ```
+
+See [zerodb.ainative.studio/docs/crewai](https://zerodb.ainative.studio/docs/crewai) for
+the full walkthrough.
 
 ## Explicit API Key
 
